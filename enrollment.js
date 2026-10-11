@@ -8,6 +8,7 @@ let studentName = "תלמידה";
 function setStudentName(name) {
     if (name && name.trim() !== "") {
         studentName = name.trim();
+        
     }
 }
 
