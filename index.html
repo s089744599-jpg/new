@@ -1,39 +1,45 @@
 <!DOCTYPE html>
-
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LearnSpace - מערכת למידה</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>LearnSpace - עמוד הבית</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>ברוכים הבאים למערכת הלמידה LearnSpace</h1>
-        <nav>
-            <a href="index.html">דף הבית</a> |
-            <a href="search.html">חיפוש מקצועות</a> |
-            <a href="upload.html">העלאת חומרים 1</a>
-        </nav>
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo">LearnSpace</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" class="active" >עמוד הבית 11111</a></li>
+                    <li><a href="search.html" >חיפוש מקצועות</a></li>
+                    <li><a href="upload.html">העלאת חומרים</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section class="intro">
-            <h2>המקצועות הנלמדים במערכת</h2>
-            <p>בחרו מקצוע מהרשימה שלהלן על מנת לצפות בחומרי הלימוד המעודכנים:</p>
+    <main class="container">
+        <section class="hero">
+            <h2>ברוכות הבאות למערכת הלמידה LearnSpace</h2>
+            <p>פה תוכלו למצוא את כל מקצועות הלימוד, חומרי העזר והמשאבים הנדרשים.</p>
         </section>
 
-        <!-- אזור הצגת רשימת המקצועות הדינמית -->
-        <section id="subjects-container" class="subjects-grid">
-            <p>טוען מקצועות מהשרת...</p>
+        <section class="subjects-section">
+            <h3>מקצועות הלימוד</h3>
+            <div id="subjects-container" class="subjects-grid">
+                <p class="loading">טוען מקצועות לימוד מתוך השרת...</p>
+            </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2026 LearnSpace. כל הזכויות שמורות.</p>
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; כל הזכויות שמורות - LearnSpace</p>
+        </div>
     </footer>
 
     <script src="js/data.js"></script>
-
 </body>
 </html>
