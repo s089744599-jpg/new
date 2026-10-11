@@ -52,4 +52,68 @@ async function fetchSubjects() {
         console.error('שגיאה:', error);
         container.innerHTML = '<p style="color: red;">לא ניתן לטעון את רשימת המקצועות כעת. אנא ודא שהשרת רץ.</p>';
     }
+
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const searchResultsContainer = document.getElementById("searchResults");
+    
+    let allSubjects = [];
+
+    // פניה לשרת לקבלת כלל המקצועות
+    async function fetchSubjects() {
+        try {
+            const response = await fetch("http://localhost:3001/api/subjects");
+            if (!response.ok) {
+                throw new Error("שגיאה בטעינת הנתונים מהשרת");
+            }
+            allSubjects = await response.json();
+            displayResults(allSubjects);
+        } catch (error) {
+            console.error("שגיאה:", error);
+            searchResultsContainer.innerHTML = "<p style='color: red;'>לא ניתן לטעון את רשימת המקצועות כרגע.</p>";
+        }
+    }
+
+    // הצגת המקצועות על המסך
+    function displayResults(subjects) {
+        searchResultsContainer.innerHTML = "";
+
+        if (subjects.length === 0) {
+            searchResultsContainer.innerHTML = "<p>לא נמצאו מקצועות התואמים את החיפוש.</p>";
+            return;
+        }
+
+        subjects.forEach(subject => {
+            const card = document.createElement("div");
+            card.style.border = "1px solid #ccc";
+            card.style.padding = "10px";
+            card.style.borderRadius = "5px";
+            card.style.maxWidth = "400px";
+
+            card.innerHTML = `
+                <h3>${subject.name}</h3>
+                <p>${subject.description || "ללא תיאור"}</p>
+                <button class="enroll-btn" data-id="${subject.id}" style="padding: 5px 10px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                    הצטרפות למקצוע
+                </button>
+            `;
+
+            searchResultsContainer.appendChild(card);
+        });
+    }
+
+    // סינון בזמן אמת לפי הקלדת המשתמשת
+    searchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.trim().toLowerCase();
+        
+        const filteredSubjects = allSubjects.filter(subject => 
+            subject.name.toLowerCase().includes(searchTerm)
+        );
+
+        displayResults(filteredSubjects);
+    });
+
+    // הפעלה ראשונית בטעינת העמוד
+    fetchSubjects();
+});
