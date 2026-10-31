@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnSpace - עמוד הבית</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>LearnSpace - מערכת חומרי למידה</h1>
+        <nav>
+            <a href="index.html">עמוד הבית</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>מקצועות הלימוד</h2>
+        
+        <!-- הודעת טעינה -->
+        <div id="loading-message" class="loading">טוען מקצועות, אנא המתן...</div>
+
+        <!-- הודעת שגיאה -->
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <!-- רשימת המקצועות שתצור דינמית -->
+        <div id="subjects-container" class="subjects-grid"></div>
+    </main>
+
+    <!-- טעינת נתונים וסקריפט -->
+    <script src="js/data.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loadingEl = document.getElementById("loading-message");
+            const errorEl = document.getElementById("error-message");
+            const container = document.getElementById("subjects-container");
+
+            try {
+                // בדיקה האם המערך subjects קיים מתוך data.js
+                if (typeof subjects === 'undefined') {
+                    throw new Error("לא נמצאו נתוני מקצועות בקובץ data.js");
+                }
+
+                // הסתרת הודעת טעינה והצגת הנתונים
+                loadingEl.style.display = "none";
+
+                subjects.forEach(subject => {
+                    const card = document.createElement("div");
+                    card.className = "subject-card";
+                    card.innerHTML = `
+                        <h3>${subject.name}</h3>
+                        <p class="teacher-name"><strong>מורה אחראית:</strong> ${subject.teacher}</p>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                loadingEl.style.display = "none";
+                errorEl.style.display = "block";
+                errorEl.textContent = "שגיאה בטעינת הנתונים מהשרת. אנא נסה שוב מאוחר יותר.";
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
