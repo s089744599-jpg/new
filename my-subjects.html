@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הקอร์סים שלי - LearnSpace</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>LearnSpace</h1>
+        <nav>
+            <a href="index.html">דף הבית</a>
+            <a href="my-subjects.html">המקצועות שלי</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>הקורסים שאני רשומה אליהם</h2>
+        
+        <!-- אזור להזנת שם התלמידה לצורך הבדיקה ב-localStorage -->
+        <div id="student-login-section" style="margin-bottom: 20px;">
+            <label for="student-name-input">שם תלמידה:</label>
+            <input type="text" id="student-name-input" placeholder="הקלידי את שמך">
+            <button id="save-name-btn">שמור שם</button>
+        </div>
+
+        <p id="welcome-msg"></p>
+
+        <!-- רשימת המקצועות שהתלמידה רשומה אליהם -->
+        <div id="my-subjects-list" class="subjects-grid">
+            <p>טוען את המקצועות שלי...</p>
+        </div>
+    </main>
+
+    <!-- קישור לקובץ ה-JS הייעודי לפיצ'ר שלך -->
+    <script src="js/my-subjects.js"></script>
+</body>
+</html>
+```[cite: 1]
+
+---
+
+### 2. קובץ ה-JavaScript: `js/my-subjects.js`
+צרי קובץ חדש בשם `my-subjects.js` בתוך תיקיית ה-`js` של הפרויקט (`js/my-subjects.js`). קובץ זה מטפל בשמירת השם ב-`localStorage` ושליפת הנתונים מתוך `GET /api/enrollments` בסינון לפי שם התלמידה[cite: 1]:
+
+```javascript
+document.addEventListener("DOMContentLoaded", () => {
+    const studentNameInput = document.getElementById("student-name-input");
+    const saveNameBtn = document.getElementById("save-name-btn");
+    const welcomeMsg = document.getElementById("welcome-msg");
+    const subjectsContainer = document.getElementById("my-subjects-list");
+
+    // בדיקה האם יש כבר שם שמור ב-localStorage
+    let currentStudent = localStorage.getItem("studentName") || "";
+    
+    if (currentStudent) {
+        studentNameInput.value = currentStudent;
+        welcomeMsg.textContent = `שלום, ${currentStudent}`;
+        loadMyEnrollments(currentStudent);
+    }
+
+    // שמירת השם ל-localStorage בעת לחיצה על כפתור
+    saveNameBtn.addEventListener("click", () => {
+        const name = studentNameInput.value.trim();
+        if (name) {
+            localStorage.setItem("studentName", name);
+            welcomeMsg.textContent = `שלום, ${name}`;
+            loadMyEnrollments(name);
+        } else {
+            alert("נא להזין שם תלמידה תקין");
+        }
+    });
+
+    // פונקציה לשליפת ההרשמות מהשרת וסינון לפי שם התלמידה
+    async function loadMyEnrollments(studentName) {
+        try {
+            subjectsContainer.innerHTML = "<p>טוען מקצועות...</p>";
+            
+            // שליפת כל ההרשמות מה-API
+            const response = await fetch("/api/enrollments");
+            if (!response.ok) {
+                throw new Error("שגיאה בטעינת נתוני ההרשמה מהשרת");
+            }
+            
+            const enrollments = await response.json();
+            
+            // סינון ההרשמות לפי השם של התלמידה הנוכחית
+            // (בהנחה שכל אובייקט הרשמה כולל studentName או student ומזהה מקצוע)
+            const myEnrollments = enrollments.filter(item => 
+                item.studentName === studentName || item.student === studentName
+            );
+
+            if (myEnrollments.length === 0) {
+                subjectsContainer.innerHTML = "<p>עדיין לא נרשמת לאף מקצוע.</p>";
+                return;
+            }
+
+            // הצגת המקצועות במסך
+            subjectsContainer.innerHTML = "";
+            myEnrollments.forEach(enrollment => {
+                const card = document.createElement("div");
+                card.className = "subject-card";
+                card.innerHTML = `
+                    <h3>${enrollment.subjectName || enrollment.subject || "מקצוע"}</h3>
+                    <p>סטטוס: רשומה ✔</p>
+                `;
+                subjectsContainer.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error(error);
+            subjectsContainer.innerHTML = `<p style="color: red;">שגיאה: ${error.message}</p>`;
+        }
+    }
+});
+```[cite: 1]
+
+---
+
+### 3. תוספות לקבצים המשותפים (כנדרש במסמך)
+אל תשכחי לבצע את שתי ההוספות הבאות לקבצים המשותפים של הצוות[cite: 1]:
+
+* **בקובץ `README.md`** (בסוף רשימת "מי עשתה מה"):
+  ```markdown
+  - בת 3: פיתוח עמוד "המקצועות שלי" (feature/my-subjects) כולל שמירה ב-localStorage וסינון לפי שם תלמידה מול /api/enrollments.
+  ```[cite: 1]
+
+* **בסוף קובץ `css/style.css`** (הוסיפי את העיצוב שלך עם הערה מעליו)[cite: 1]:
+  ```css
+  /* feature/my-subjects styles */
+  .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+  }
+  .subject-card {
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+  }
+  ```[cite: 1]
