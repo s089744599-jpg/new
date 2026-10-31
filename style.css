@@ -204,3 +204,24 @@ body {
     padding: 1rem 0;
     margin-top: auto;
 }
+/* feature/upload-validation */
+#message {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    display: none;
+}
+
+#message.success {
+    display: block;
+    background: #e6f4ea;
+    color: #1e6b34;
+    border: 1px solid #1e6b34;
+}
+
+#message.error {
+    display: block;
+    background: #fdecea;
+    color: #a12622;
+    border: 1px solid #a12622;
+}

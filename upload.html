@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>העלאת חומר - LearnSpace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <h1>העלאת חומר חדש</h1>
+
+        <form id="upload-form" novalidate>
+            <label for="subject">מקצוע</label>
+            <select id="subject" name="subject">
+                <option value="">בחרי מקצוע...</option>
+            </select>
+
+            <label for="title">כותרת</label>
+            <input type="text" id="title" name="title">
+
+            <label for="type">סוג חומר</label>
+            <select id="type" name="type">
+                <option value="">בחרי סוג...</option>
+                <option value="lesson">שיעור</option>
+                <option value="recording">הקלטה</option>
+                <option value="page">דף</option>S
+            </select>
+
+            <label for="file">קובץ</label>
+            <input type="file" id="file" name="file">
+
+            <button type="submit">העלאה</button>
+        </form>
+
+        <div id="message" role="alert"></div>
+    </main>
+
+    <script src="upload.js"></script>
+</body>
+</html>
