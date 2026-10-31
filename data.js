@@ -1,10 +1,12 @@
-
 // כתובת השרת
 const API_URL = 'http://localhost:3001/api';
 
 // פונקציה לטעינת המקצועות מהשרת והצגתם
 async function fetchSubjects() {
     const container = document.getElementById('subjects-container');
+
+    // 1. הצגת הודעת "טוען..." בזמן שהמקצועות נטענים מהשרת
+    container.innerHTML = '<p class="loading">טוען מקצועות, אנא המתן...</p>';
 
     try {
         const response = await fetch(`${API_URL}/subjects`);
@@ -17,6 +19,7 @@ async function fetchSubjects() {
         renderSubjects(subjects);
     } catch (error) {
         console.error('Error fetching subjects:', error);
+        // 2. הודעת שגיאה ידידותית אם הפנייה נכשלה
         container.innerHTML = `<p class="error-message">אירעה שגיאה בטעינת המקצועות. נא לוודא שהשרת פועל בכתובת http://localhost:3001</p>`;
     }
 }
@@ -35,14 +38,16 @@ function renderSubjects(subjects) {
         const card = document.createElement('div');
         card.className = 'subject-card';
         
-        // חיבור עתידי לעמוד המקצוע (בהתאם להנחיות האינטגרציה בבלוק 2)
+        // חיבור לעמוד המקצוע
         card.onclick = () => {
             const subjectId = subject.id || subject._id;
             window.location.href = `subject.html?id=${subjectId}`;
         };
 
+        // 3. הצגת שם המורה האחראית בכל כרטיסיית מקצוע (דרישה חובה לבת 1)
         card.innerHTML = `
             <h4>${subject.name || subject.title || 'מקצוע ללא שם'}</h4>
+            <p><strong>מורה אחראית:</strong> ${subject.teacher || 'לאצן מוגדר'}</p>
             <p>${subject.description || 'אין תיאור זמין למקצוע זה.'}</p>
         `;
 
@@ -52,10 +57,3 @@ function renderSubjects(subjects) {
 
 // הפעלת הטעינה בטעינת העמוד
 document.addEventListener('DOMContentLoaded', fetchSubjects);
-// הכתובת הבסיסית של השרת
-const API_BASE_URL = 'http://localhost:3001/api';
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetchSubjects();
-});
-

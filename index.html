@@ -17,50 +17,13 @@
     <main class="container">
         <h2>מקצועות הלימוד</h2>
         
-        <!-- הודעת טעינה -->
-        <div id="loading-message" class="loading">טוען מקצועות, אנא המתן...</div>
-
-        <!-- הודעת שגיאה -->
-        <div id="error-message" class="error" style="display: none;"></div>
-
-        <!-- רשימת המקצועות שתצור דינמית -->
-        <div id="subjects-container" class="subjects-grid"></div>
+        <!-- רשימת המקצועות שתצור דינמית (הודעות הטעינה והשגיאה יופיעו בתוכה או ינוהלו ב-JS) -->
+        <div id="subjects-container" class="subjects-grid">
+            <p class="loading">טוען מקצועות, אנא המתן...</p>
+        </div>
     </main>
 
-    <!-- טעינת נתונים וסקריפט -->
-    <script src="js/data.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const loadingEl = document.getElementById("loading-message");
-            const errorEl = document.getElementById("error-message");
-            const container = document.getElementById("subjects-container");
-
-            try {
-                // בדיקה האם המערך subjects קיים מתוך data.js
-                if (typeof subjects === 'undefined') {
-                    throw new Error("לא נמצאו נתוני מקצועות בקובץ data.js");
-                }
-
-                // הסתרת הודעת טעינה והצגת הנתונים
-                loadingEl.style.display = "none";
-
-                subjects.forEach(subject => {
-                    const card = document.createElement("div");
-                    card.className = "subject-card";
-                    card.innerHTML = `
-                        <h3>${subject.name}</h3>
-                        <p class="teacher-name"><strong>מורה אחראית:</strong> ${subject.teacher}</p>
-                    `;
-                    container.appendChild(card);
-                });
-
-            } catch (error) {
-                loadingEl.style.display = "none";
-                errorEl.style.display = "block";
-                errorEl.textContent = "שגיאה בטעינת הנתונים מהשרת. אנא נסה שוב מאוחר יותר.";
-                console.error(error);
-            }
-        });
-    </script>
+    <!-- טעינת הסקריפט החיצוני שמדבר עם השרת -->
+    <script src="js/main.js"></script>
 </body>
 </html>
