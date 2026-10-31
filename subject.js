@@ -77,3 +77,71 @@ function renderMaterialsList(materials) {
         listContainer.appendChild(listItem);
     });
 }
+async function loadSubjectMaterials(subjectId) {
+    const container = document.getElementById('materials-container');
+    
+    try {
+        // שליפת החומרים מהשרת עבור המקצוע הנוכחי
+        const response = await fetch(`/api/subjects/${subjectId}/materials`);
+        const materials = await response.json();
+
+        // 1. בדיקה האם הרשימה ריקה
+        if (!materials || materials.length === 0) {
+            container.innerHTML = '<p class="no-materials-msg">עדיין אין חומרים</p>';
+            return;
+        }
+
+        // איפוס המכולה לפני הוספת הנתונים
+        container.innerHTML = '';
+
+        // 2. חלוקה לקבוצות לפי סוג (lessons, recordings, pages)
+        const categorizedMaterials = {
+            'שיעורים': [],
+            'הקלטות': [],
+            'דפים': []
+        };
+
+        materials.forEach(material => {
+            if (categorizedMaterials[material.type]) {
+                categorizedMaterials[material.type].push(material);
+            } else {
+                // אם קיים סוג שלא הוגדר מראש, ניצור לו קטגוריה דינמית
+                if (!categorizedMaterials[material.type]) {
+                    categorizedMaterials[material.type] = [];
+                }
+                categorizedMaterials[material.type].push(material);
+            }
+        });
+
+        // 3. בניית ה-HTML עבור כל קבוצה וחומר
+        for (const [type, items] of Object.entries(categorizedMaterials)) {
+            if (items.length > 0) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'material-group';
+                
+                const groupTitle = document.createElement('h3');
+                groupTitle.textContent = type;
+                groupDiv.appendChild(groupTitle);
+
+                const list = document.createElement('ul');
+                items.forEach(item => {
+                    const listItem = document.createElement('li');
+                    
+                    // יצירת שם הקובץ וקישור פתיחה/הורדה
+                    listItem.innerHTML = `
+                        <span class="material-title">${item.title}</span>
+                        <a href="${item.fileUrl}" target="_blank" class="material-link">הורדה / פתיחה</a>
+                    `;
+                    list.appendChild(listItem);
+                });
+
+                groupDiv.appendChild(list);
+                container.appendChild(groupDiv);
+            }
+        }
+
+    } catch (error) {
+        console.error('שגיאה בטעינת החומרים:', error);
+        container.innerHTML = '<p class="error-msg">שגיאה בטעינת החומרים למקצוע זה.</p>';
+    }
+}

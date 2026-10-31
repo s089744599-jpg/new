@@ -218,4 +218,9 @@ body {
     border-radius: 8px;
     background-color: #f9f9f9;
 }
-```[cite: 1]
+/*[cite: 1]
+
+/* feature/subject-materials: עיצוב חומרי לימוד בעמוד מקצוע */
+.material-group { margin-bottom: 20px; }
+.no-materials-msg { color: #666; font-style: italic; }
+
